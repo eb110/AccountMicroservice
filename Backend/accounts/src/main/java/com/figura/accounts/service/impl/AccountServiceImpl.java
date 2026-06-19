@@ -1,10 +1,13 @@
 package com.figura.accounts.service.impl;
 
 import com.figura.accounts.constants.AccountsConstants;
+import com.figura.accounts.dto.AccountsDto;
 import com.figura.accounts.dto.CustomerDto;
 import com.figura.accounts.entity.Accounts;
 import com.figura.accounts.entity.Customer;
 import com.figura.accounts.exception.CustomerAlreadyExistsException;
+import com.figura.accounts.exception.ResourceNotFoundException;
+import com.figura.accounts.mapper.AccountsMapper;
 import com.figura.accounts.mapper.CustomerMapper;
 import com.figura.accounts.repository.AccountsRepository;
 import com.figura.accounts.repository.CustomerRepository;
@@ -36,6 +39,19 @@ public class AccountServiceImpl implements IAccountsService {
         customer.setCreatedBy("Anonymous");
         Customer savedCustomer = customerRepository.save(customer);
         accountsRepository.save(createNewAccount(savedCustomer));
+    }
+
+    @Override
+    public CustomerDto fetchAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
+                );
+        Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
+                () -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString())
+        );
+        AccountsDto accountsDto = AccountsMapper.mapToAccountsDto(accounts, new AccountsDto());
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, accountsDto, new CustomerDto());
+        return customerDto;
     }
 
 

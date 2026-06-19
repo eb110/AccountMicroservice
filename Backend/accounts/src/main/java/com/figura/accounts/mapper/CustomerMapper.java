@@ -1,14 +1,16 @@
 package com.figura.accounts.mapper;
 
+import com.figura.accounts.dto.AccountsDto;
 import com.figura.accounts.dto.CustomerDto;
 import com.figura.accounts.entity.Customer;
 
 public class CustomerMapper {
 
-    public static CustomerDto mapToCustomerDto(Customer customer, CustomerDto customerDto) {
+    public static CustomerDto mapToCustomerDto(Customer customer, AccountsDto accountsDto, CustomerDto customerDto) {
         customerDto.setName(customer.getName());
         customerDto.setEmail(customer.getEmail());
         customerDto.setMobileNumber(customer.getMobileNumber());
+        customerDto.setAccountsDto(accountsDto);
         return customerDto;
     }
 
