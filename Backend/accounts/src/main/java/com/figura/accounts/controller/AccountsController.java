@@ -4,7 +4,6 @@ import com.figura.accounts.constants.AccountsConstants;
 import com.figura.accounts.dto.CustomerDto;
 import com.figura.accounts.dto.ResponseDto;
 import com.figura.accounts.service.IAccountsService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
