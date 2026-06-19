@@ -35,8 +35,6 @@ public class AccountServiceImpl implements IAccountsService {
             //global exception handler will be triggered as well and custom response will be sent to client
             throw new CustomerAlreadyExistsException("Customer already registered with provided mobile number " + customerDto.getMobileNumber());
         }
-        customer.setCreateAt(LocalDateTime.now());
-        customer.setCreatedBy("Anonymous");
         Customer savedCustomer = customerRepository.save(customer);
         accountsRepository.save(createNewAccount(savedCustomer));
     }
@@ -93,8 +91,6 @@ public class AccountServiceImpl implements IAccountsService {
         newAccount.setAccountNumber(randomAccNumber);
         newAccount.setAccountType(AccountsConstants.SAVINGS);
         newAccount.setBranchAddress(AccountsConstants.ADDRESS);
-        newAccount.setCreateAt(LocalDateTime.now());
-        newAccount.setCreatedBy("Anonymous");
         return newAccount;
     }
 }
