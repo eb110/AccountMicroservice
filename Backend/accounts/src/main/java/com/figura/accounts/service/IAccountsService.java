@@ -1,5 +1,6 @@
 package com.figura.accounts.service;
 
+import com.figura.accounts.dto.AccountsDto;
 import com.figura.accounts.dto.CustomerDto;
 
 public interface IAccountsService {
@@ -11,4 +12,6 @@ public interface IAccountsService {
     boolean updateAccount(CustomerDto customerDto);
 
     boolean deleteAccount(String mobileNumber);
+
+    AccountsDto[] fetchAccounts();
 }

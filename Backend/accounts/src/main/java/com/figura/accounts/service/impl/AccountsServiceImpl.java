@@ -15,13 +15,13 @@ import com.figura.accounts.service.IAccountsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 @Service
 @AllArgsConstructor
-public class AccountServiceImpl implements IAccountsService {
+public class AccountsServiceImpl implements IAccountsService {
 
     private AccountsRepository accountsRepository;
     private CustomerRepository customerRepository;
@@ -81,6 +81,13 @@ public class AccountServiceImpl implements IAccountsService {
         accountsRepository.deleteByCustomerId(customer.getCustomerId());
         customerRepository.deleteById(customer.getCustomerId());
         return true;
+    }
+
+    @Override
+    public AccountsDto[] fetchAccounts() {
+        List<Accounts> accounts = accountsRepository.findAll();
+        AccountsDto[] accountsDtos = accounts.stream().map(x -> AccountsMapper.mapToAccountsDto(x, new AccountsDto())).toArray(AccountsDto[]::new);
+        return accountsDtos;
     }
 
     private Accounts createNewAccount(Customer customer) {

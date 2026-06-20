@@ -1,6 +1,7 @@
 package com.figura.accounts.controller;
 
 import com.figura.accounts.constants.AccountsConstants;
+import com.figura.accounts.dto.AccountsDto;
 import com.figura.accounts.dto.CustomerDto;
 import com.figura.accounts.dto.ResponseDto;
 import com.figura.accounts.service.IAccountsService;
@@ -46,6 +47,15 @@ public class AccountsController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(customerDto);
+    }
+
+    @GetMapping("/accounts")
+    public ResponseEntity<AccountsDto[]> fetchAccounts() {
+        AccountsDto[] accounts = iAccountsService.fetchAccounts();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accounts);
     }
 
     @PutMapping("/update")
