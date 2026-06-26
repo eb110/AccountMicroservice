@@ -1,0 +1,40 @@
+services:
+  accounts:
+    image: "beb110/accounts:ver4"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - figura
+
+  loans:
+    image: "beb110/loans:ver1"
+    container_name: loans-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - figura
+
+  cards:
+    image: "beb110/cards:ver1"
+    container_name: cards-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - figura
+
+networks:
+  figura:
+    driver: "bridge"
