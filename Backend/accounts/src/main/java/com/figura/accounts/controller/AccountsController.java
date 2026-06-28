@@ -1,6 +1,7 @@
 package com.figura.accounts.controller;
 
 import com.figura.accounts.constants.AccountsConstants;
+import com.figura.accounts.dto.AccountsCustomData;
 import com.figura.accounts.dto.AccountsDto;
 import com.figura.accounts.dto.CustomerDto;
 import com.figura.accounts.dto.ResponseDto;
@@ -8,6 +9,10 @@ import com.figura.accounts.service.IAccountsService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +23,27 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path="/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 //autowiring by constructor => for service and all other props
 //this works only if we have a single constructor
-@AllArgsConstructor
+//not working if config data autowired (build version)
+//@AllArgsConstructor
+
 //spring validation based on dto validators
 @Validated
 public class AccountsController {
 
-    private IAccountsService iAccountsService;
+    private final IAccountsService iAccountsService;
+
+    @Value("${build.version}")
+    private String buildVersion;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private AccountsCustomData accountsCustomData;
+
+    public AccountsController(IAccountsService iAccountsService) {
+        this.iAccountsService = iAccountsService;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
@@ -86,5 +106,26 @@ public class AccountsController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(AccountsConstants.STATUS_417, AccountsConstants.MESSAGE_417_DELETE));
         }
+    }
+
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfo(){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(buildVersion);
+    }
+
+    @GetMapping("/maven-version")
+    public ResponseEntity<String> getJavaVersion(){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(environment.getProperty("MAVEN_HOME"));
+    }
+
+    @GetMapping("/custom-info")
+    public ResponseEntity<AccountsCustomData> getCustomInfo(){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accountsCustomData);
     }
 }
